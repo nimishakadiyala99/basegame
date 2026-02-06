@@ -16,9 +16,6 @@
       --text: #34313a;
       --card: rgba(255, 255, 255, 0.94);
       --shadow: 0 18px 45px rgba(44, 17, 32, 0.22);
-      --cross: #ffe6ec;
-      --cross-ink: #8f3f54;
-      --ok: #24a261;
     }
 
     * { box-sizing: border-box; }
@@ -162,120 +159,74 @@
       transition: left 0.18s ease, top 0.18s ease;
     }
 
-    .crossword-wrap {
-      width: min(900px, 94vw);
-      margin-top: 6px;
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 18px;
-      text-align: left;
-      align-items: start;
+    /* Mini game */
+    .game-wrap {
+      width: min(780px, 94vw);
+      margin-top: 8px;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(8, 1fr);
-      gap: 4px;
-      background: #fdd8e2;
-      padding: 10px;
-      border-radius: 14px;
-    }
-
-    .cell {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      border-radius: 8px;
-      background: var(--cross);
-      border: 1px solid #f3b9c8;
+    .game-area {
       position: relative;
-      text-transform: lowercase;
+      width: 100%;
+      height: 260px;
+      border-radius: 20px;
+      overflow: hidden;
+      background: linear-gradient(to top, #ffd6e0 30%, #fff4f7 30%);
+      border: 2px solid rgba(255, 255, 255, 0.7);
+      box-shadow: var(--shadow);
+    }
+
+    .score {
+      position: absolute;
+      right: 14px;
+      top: 10px;
       font-weight: 700;
-      color: var(--cross-ink);
+      color: #7a3646;
+      z-index: 3;
+    }
+
+    .runner {
+      position: absolute;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      left: 40px;
+      bottom: 32px;
+      background: radial-gradient(circle at 30% 30%, #ff88a0, #ff4d6d);
+      box-shadow: 0 8px 16px rgba(255, 77, 109, 0.4);
+      transition: bottom 0.42s cubic-bezier(.2,.8,.2,1);
+      z-index: 2;
+    }
+
+    .runner::after {
+      content: '💖';
+      position: absolute;
+      inset: 0;
       display: grid;
       place-items: center;
+      font-size: 21px;
     }
 
-    .cell.filled {
-      background: #fff;
-      border-color: #eca5b8;
-    }
-
-    .cell.ok {
-      background: #dbf8e9;
-      border-color: #83d9ac;
-      color: #1f7a4a;
-    }
-
-    .n {
+    .obstacle {
       position: absolute;
-      top: 2px;
-      left: 5px;
-      font-size: 10px;
-      font-weight: 600;
-      color: #aa5f75;
+      right: -45px;
+      bottom: 30px;
+      width: 36px;
+      height: 60px;
+      border-radius: 8px;
+      background: #7a5360;
+      z-index: 1;
     }
 
-    .clues {
-      background: #fff8fa;
-      border: 1px solid #ffd7e2;
-      border-radius: 14px;
-      padding: 14px;
-    }
-
-    .clues h3 {
-      margin: 0 0 10px;
-      color: #8d4358;
-      font-size: 1rem;
-    }
-
-    .clue {
-      margin-bottom: 10px;
-      font-size: 0.92rem;
-      color: #62424d;
-    }
-
-    .answers {
-      display: grid;
+    .controls {
+      margin-top: 14px;
+      display: flex;
       gap: 10px;
-    }
-
-    .answers label {
-      font-size: 0.86rem;
-      font-weight: 600;
-      color: #804557;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-    }
-
-    .answers input {
-      width: 100%;
-      margin-top: 4px;
-      border-radius: 10px;
-      border: 1px solid #f0b7c8;
-      padding: 10px 12px;
-      font-size: 0.95rem;
-      font-family: inherit;
-      outline: none;
-      background: white;
-    }
-
-    .answers input:focus {
-      border-color: #ff7f9e;
-      box-shadow: 0 0 0 3px rgba(255, 127, 158, 0.2);
-    }
-
-    .result-ok {
-      color: var(--ok);
-      font-weight: 700;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
     .hidden { display: none; }
-
-    @media (max-width: 820px) {
-      .crossword-wrap {
-        grid-template-columns: 1fr;
-      }
-    }
 
     @media (max-width: 640px) {
       #noBtn { position: static; }
@@ -337,43 +288,19 @@
 </section>
 
 <section id="game">
-  <div class="card">
-    <h1>Mini Love Crossword 🧩💕</h1>
-    <p>Fill all 4 answers to unlock the final message.</p>
-
-    <div class="crossword-wrap">
-      <div class="grid" id="crossGrid" aria-label="Mini crossword grid"></div>
-
-      <div class="clues">
-        <h3>Clues</h3>
-        <div class="clue"><strong>1.</strong> What was the first movie we went together?</div>
-        <div class="clue"><strong>2.</strong> How many years have you known me?</div>
-        <div class="clue"><strong>3.</strong> My favorite way of calling you?</div>
-        <div class="clue"><strong>4.</strong> One thing you love most (puppy = me 😌)?</div>
-
-        <div class="answers">
-          <label>1 Across
-            <input id="a1" autocomplete="off" placeholder="movie title">
-          </label>
-          <label>2 Down
-            <input id="a2" autocomplete="off" placeholder="number in words">
-          </label>
-          <label>3 Across
-            <input id="a3" autocomplete="off" placeholder="nickname">
-          </label>
-          <label>4 Down
-            <input id="a4" autocomplete="off" placeholder="favorite thing">
-          </label>
-        </div>
-
-        <div class="btn-row" style="justify-content:flex-start; margin-top:14px;">
-          <button class="secondary" onclick="checkCrossword()">Check Answers ✅</button>
-          <button class="secondary" onclick="resetCrossword()">Reset</button>
-          <button id="finishBtn" class="hidden" onclick="goTo('end')">Continue 💌</button>
-        </div>
-        <p id="gameStatus" class="muted">Hint: answers are all one word, lowercase is okay.</p>
-      </div>
+  <div class="card game-wrap">
+    <h1>Catch the Love 💕</h1>
+    <p>Press <strong>Space</strong>, tap, or click to jump. Reach 12 points to win.</p>
+    <div class="game-area" id="gameArea">
+      <div class="score" id="score">Score: 0</div>
+      <div class="runner" id="runner"></div>
+      <div class="obstacle" id="obstacle"></div>
     </div>
+    <div class="controls">
+      <button class="secondary" onclick="startGame()">Restart Game</button>
+      <button id="finishBtn" class="hidden" onclick="goTo('end')">Continue 💌</button>
+    </div>
+    <p id="gameStatus" class="muted">You got this, babe ✨</p>
   </div>
 </section>
 
@@ -397,12 +324,14 @@
     document.getElementById(id).classList.add('active');
 
     if (id === 'game') {
-      resetCrossword();
+      startGame();
     }
 
+    // Browsers block autoplay without user interaction; this is called by button click.
     bgMusic.play().catch(() => {});
   }
 
+  // Floating hearts effect
   setInterval(() => {
     const heart = document.createElement('div');
     heart.className = 'heart';
@@ -414,11 +343,14 @@
     setTimeout(() => heart.remove(), 9000);
   }, 400);
 
+  // Escaping "No" button
   const noBtn = document.getElementById('noBtn');
   const quizBtns = document.getElementById('quizBtns');
 
   function moveNoBtn() {
-    if (window.innerWidth <= 640) return;
+    if (window.innerWidth <= 640) {
+      return;
+    }
     const bounds = quizBtns.getBoundingClientRect();
     const maxX = Math.max(0, bounds.width - noBtn.offsetWidth);
     const maxY = 80;
@@ -431,6 +363,103 @@
       event.preventDefault();
       moveNoBtn();
     });
+  });
+
+  // Mini game logic
+  const runner = document.getElementById('runner');
+  const obstacle = document.getElementById('obstacle');
+  const scoreLabel = document.getElementById('score');
+  const statusLabel = document.getElementById('gameStatus');
+  const finishBtn = document.getElementById('finishBtn');
+
+  let jumping = false;
+  let score = 0;
+  let obstacleX = -45;
+  let obstacleSpeed = 5;
+  let gameLoopId = null;
+
+  function jump() {
+    if (jumping) return;
+    jumping = true;
+    runner.style.bottom = '120px';
+    setTimeout(() => {
+      runner.style.bottom = '32px';
+      setTimeout(() => {
+        jumping = false;
+      }, 60);
+    }, 430);
+  }
+
+  function resetObstacle() {
+    obstacleX = -45;
+    obstacle.style.right = `${obstacleX}px`;
+  }
+
+  function updateGame() {
+    obstacleX += obstacleSpeed;
+    obstacle.style.right = `${obstacleX}px`;
+
+    const runnerBottom = parseInt(window.getComputedStyle(runner).bottom, 10);
+    const runnerLeft = 40;
+    const runnerRight = runnerLeft + 52;
+
+    const obsRight = obstacleX;
+    const obsLeft = obstacleX - 36;
+
+    const horizontalHit = runnerRight >= obsLeft && runnerLeft <= obsRight;
+    const verticalHit = runnerBottom <= 70;
+
+    if (horizontalHit && verticalHit) {
+      statusLabel.textContent = 'Oops! You hit a block. Try again 😘';
+      startGame();
+      return;
+    }
+
+    if (obstacleX > window.innerWidth + 60) {
+      score += 1;
+      scoreLabel.textContent = `Score: ${score}`;
+      obstacleSpeed = Math.min(10, obstacleSpeed + 0.25);
+      resetObstacle();
+
+      if (score >= 12) {
+        clearInterval(gameLoopId);
+        gameLoopId = null;
+        finishBtn.classList.remove('hidden');
+        statusLabel.textContent = 'You win my heart every time 🥹';
+      }
+    }
+  }
+
+  function startGame() {
+    score = 0;
+    obstacleSpeed = 5;
+    scoreLabel.textContent = 'Score: 0';
+    statusLabel.textContent = 'You got this, babe ✨';
+    finishBtn.classList.add('hidden');
+    runner.style.bottom = '32px';
+    jumping = false;
+    resetObstacle();
+    if (gameLoopId) {
+      clearInterval(gameLoopId);
+    }
+    gameLoopId = setInterval(updateGame, 16);
+  }
+
+  document.addEventListener('click', (event) => {
+    const activeSection = document.querySelector('section.active');
+    if (activeSection && activeSection.id === 'game') {
+      const buttonClicked = event.target.closest('button');
+      if (!buttonClicked) {
+        jump();
+      }
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.code === 'Space' && document.getElementById('game').classList.contains('active')) {
+      event.preventDefault();
+      jump();
+    }
   });
 
   const crosswordAnswers = {
