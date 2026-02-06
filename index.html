@@ -4,224 +4,543 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>For My Love ❤️ | 7 Years of Us</title>
-
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      --bg-1: #ff9a9e;
+      --bg-2: #fad0c4;
+      --accent: #ff4d6d;
+      --text: #34313a;
+      --card: rgba(255, 255, 255, 0.94);
+      --shadow: 0 18px 45px rgba(44, 17, 32, 0.22);
+      --cross: #ffe6ec;
+      --cross-ink: #8f3f54;
+      --ok: #24a261;
+    }
+
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      color: var(--text);
+      background: linear-gradient(140deg, var(--bg-1), var(--bg-2));
       overflow: hidden;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.4), transparent 35%),
+        radial-gradient(circle at 85% 25%, rgba(255, 255, 255, 0.35), transparent 30%),
+        radial-gradient(circle at 60% 80%, rgba(255, 180, 200, 0.25), transparent 35%);
+      pointer-events: none;
+      z-index: 0;
     }
 
     section {
       display: none;
+      position: relative;
       height: 100vh;
       width: 100vw;
+      padding: 28px;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 20px;
+      z-index: 1;
     }
 
     section.active {
       display: flex;
       flex-direction: column;
+      gap: 10px;
+      animation: slideIn 0.55s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(16px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     h1 {
-      color: #ff4d6d;
-      margin-bottom: 10px;
+      color: var(--accent);
+      margin: 0 0 10px;
+      font-weight: 700;
+      line-height: 1.2;
     }
 
     p {
-      color: #444;
-      max-width: 600px;
+      margin: 6px 0;
+      max-width: 680px;
+      font-size: clamp(1rem, 2.3vw, 1.1rem);
+    }
+
+    .card {
+      width: min(760px, 92vw);
+      background: var(--card);
+      backdrop-filter: blur(5px);
+      border-radius: 24px;
+      padding: clamp(24px, 4vw, 40px);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.65);
+    }
+
+    .muted {
+      font-size: 0.95rem;
+      color: #6b5d65;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+      min-height: 58px;
+      position: relative;
     }
 
     button {
-      padding: 12px 25px;
+      padding: 12px 24px;
       border: none;
-      border-radius: 30px;
-      background: #ff4d6d;
+      border-radius: 999px;
+      background: var(--accent);
       color: white;
-      font-size: 16px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
       cursor: pointer;
-      margin-top: 20px;
-      transition: 0.3s;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      box-shadow: 0 8px 20px rgba(255, 77, 109, 0.38);
     }
 
-    button:hover { transform: scale(1.05); }
+    button:hover { transform: translateY(-2px) scale(1.02); }
+    button:active { transform: translateY(0) scale(0.98); }
 
-    /* Floating hearts */
+    .secondary {
+      background: #fff;
+      color: var(--accent);
+      border: 1px solid #ffc2ce;
+      box-shadow: none;
+    }
+
     .heart {
-      position: absolute;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 20px;
-      animation: float 6s linear infinite;
+      position: fixed;
+      top: 105vh;
+      color: rgba(255, 255, 255, 0.85);
+      animation: floatUp linear forwards;
+      z-index: 0;
+      pointer-events: none;
+      text-shadow: 0 4px 10px rgba(173, 16, 48, 0.2);
     }
 
-    @keyframes float {
-      from { transform: translateY(100vh); opacity: 1; }
-      to { transform: translateY(-10vh); opacity: 0; }
+    @keyframes floatUp {
+      to {
+        transform: translateY(-120vh) rotate(20deg);
+        opacity: 0;
+      }
     }
 
-    /* Letter card */
-    .letter {
-      background: white;
-      padding: 30px;
-      border-radius: 20px;
-      max-width: 700px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      animation: fadeIn 1s ease;
+    .timeline {
+      text-align: left;
+      margin: 18px auto 0;
+      width: min(600px, 100%);
+      padding-left: 18px;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Quiz buttons */
-    .quiz-btns {
-      position: relative;
-      margin-top: 30px;
-    }
+    .timeline li { margin: 8px 0; }
 
     #noBtn {
       position: absolute;
+      transition: left 0.18s ease, top 0.18s ease;
     }
 
-    /* Mini game */
-    .runner {
-      width: 60px;
-      height: 60px;
-      background: #ff4d6d;
-      border-radius: 50%;
+    .crossword-wrap {
+      width: min(900px, 94vw);
+      margin-top: 6px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 18px;
+      text-align: left;
+      align-items: start;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 4px;
+      background: #fdd8e2;
+      padding: 10px;
+      border-radius: 14px;
+    }
+
+    .cell {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 8px;
+      background: var(--cross);
+      border: 1px solid #f3b9c8;
+      position: relative;
+      text-transform: lowercase;
+      font-weight: 700;
+      color: var(--cross-ink);
+      display: grid;
+      place-items: center;
+    }
+
+    .cell.filled {
+      background: #fff;
+      border-color: #eca5b8;
+    }
+
+    .cell.ok {
+      background: #dbf8e9;
+      border-color: #83d9ac;
+      color: #1f7a4a;
+    }
+
+    .n {
       position: absolute;
-      bottom: 40px;
-      left: 50px;
+      top: 2px;
+      left: 5px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #aa5f75;
     }
 
-    .obstacle {
-      width: 40px;
-      height: 40px;
-      background: #333;
-      position: absolute;
-      bottom: 40px;
-      right: -50px;
-      animation: moveObs 2s linear infinite;
+    .clues {
+      background: #fff8fa;
+      border: 1px solid #ffd7e2;
+      border-radius: 14px;
+      padding: 14px;
     }
 
-    @keyframes moveObs {
-      from { right: -50px; }
-      to { right: 100vw; }
+    .clues h3 {
+      margin: 0 0 10px;
+      color: #8d4358;
+      font-size: 1rem;
+    }
+
+    .clue {
+      margin-bottom: 10px;
+      font-size: 0.92rem;
+      color: #62424d;
+    }
+
+    .answers {
+      display: grid;
+      gap: 10px;
+    }
+
+    .answers label {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: #804557;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .answers input {
+      width: 100%;
+      margin-top: 4px;
+      border-radius: 10px;
+      border: 1px solid #f0b7c8;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      background: white;
+    }
+
+    .answers input:focus {
+      border-color: #ff7f9e;
+      box-shadow: 0 0 0 3px rgba(255, 127, 158, 0.2);
+    }
+
+    .result-ok {
+      color: var(--ok);
+      font-weight: 700;
+    }
+
+    .hidden { display: none; }
+
+    @media (max-width: 820px) {
+      .crossword-wrap {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      #noBtn { position: static; }
+      .btn-row { min-height: auto; }
+      section { padding: 18px; }
     }
   </style>
 </head>
 <body>
 
-<!-- Background Music -->
-<audio id="bgMusic" autoplay loop>
+<audio id="bgMusic" loop>
   <source src="song.mp3" type="audio/mpeg">
 </audio>
 
-<!-- Opening -->
 <section id="open" class="active">
-  <h1>For My Love ❤️</h1>
-  <p>7 years. A million memories. One heart that chose you every time.</p>
-  <button onclick="goTo('letter')">Open Letter 💌</button>
+  <div class="card">
+    <h1>For My Love ❤️</h1>
+    <p>7 years. A million tiny moments. One person I still choose, every single day.</p>
+    <p class="muted">Tap start, and let me show you our little story.</p>
+    <div class="btn-row">
+      <button id="startBtn" onclick="goTo('letter')">Start Our Story ✨</button>
+    </div>
+  </div>
 </section>
 
-<!-- Letter -->
 <section id="letter">
-  <div class="letter">
+  <div class="card">
     <h1>My Love,</h1>
     <p>
-      Seven years ago, I had no idea how deeply you would become part of my life.
-      Through every high, every low, every fight, laugh, and quiet moment - you stayed.
-      You are my comfort, my best friend, my home.
+      Seven years ago, I didn’t know that one person could feel like peace,
+      laughter, adventure, and home all at once. But then there was you.
     </p>
     <p>
-      Thank you for growing with me, loving me, and choosing us even on the hard days.
-      If I had to do it all again… I’d still choose you. Every single time.
+      Thank you for staying through the messy days and celebrating the beautiful ones.
+      Thank you for growing with me and never giving up on us.
     </p>
+    <ul class="timeline">
+      <li><strong>Year 1:</strong> Butterflies and first memories.</li>
+      <li><strong>Year 3:</strong> We learned to choose each other on hard days too.</li>
+      <li><strong>Year 5:</strong> More laughter, more strength, more “us”.</li>
+      <li><strong>Year 7:</strong> Still my favorite person. Still my best decision.</li>
+    </ul>
     <p><strong>Happy 7-Year Anniversary ❤️</strong></p>
-    <button onclick="goTo('quiz')">One Question 😏</button>
+    <div class="btn-row">
+      <button onclick="goTo('quiz')">One Important Question 😌</button>
+    </div>
   </div>
 </section>
 
-<!-- Quiz -->
 <section id="quiz">
-  <h1>Important Question 😌</h1>
-  <p>Do you love me?</p>
-
-  <div class="quiz-btns">
-    <button onclick="goTo('game')">YES ❤️</button>
-    <button id="noBtn">No 🙃</button>
+  <div class="card">
+    <h1>Okay, be honest… 😏</h1>
+    <p>Do you love me?</p>
+    <div class="btn-row" id="quizBtns">
+      <button onclick="goTo('game')">YES, OBVIOUSLY ❤️</button>
+      <button id="noBtn" class="secondary" aria-label="No button that playfully escapes">No 🙃</button>
+    </div>
   </div>
 </section>
 
-<!-- Mini Game -->
 <section id="game">
-  <h1>Catch the Love 💕</h1>
-  <p>Tap anywhere to jump. Don’t hit the blocks!</p>
-  <div class="runner" id="runner"></div>
-  <div class="obstacle"></div>
-  <button onclick="goTo('end')">I Win 😎</button>
+  <div class="card">
+    <h1>Mini Love Crossword 🧩💕</h1>
+    <p>Fill all 4 answers to unlock the final message.</p>
+
+    <div class="crossword-wrap">
+      <div class="grid" id="crossGrid" aria-label="Mini crossword grid"></div>
+
+      <div class="clues">
+        <h3>Clues</h3>
+        <div class="clue"><strong>1.</strong> What was the first movie we went together?</div>
+        <div class="clue"><strong>2.</strong> How many years have you known me?</div>
+        <div class="clue"><strong>3.</strong> My favorite way of calling you?</div>
+        <div class="clue"><strong>4.</strong> One thing you love most (puppy = me 😌)?</div>
+
+        <div class="answers">
+          <label>1 Across
+            <input id="a1" autocomplete="off" placeholder="movie title">
+          </label>
+          <label>2 Down
+            <input id="a2" autocomplete="off" placeholder="number in words">
+          </label>
+          <label>3 Across
+            <input id="a3" autocomplete="off" placeholder="nickname">
+          </label>
+          <label>4 Down
+            <input id="a4" autocomplete="off" placeholder="favorite thing">
+          </label>
+        </div>
+
+        <div class="btn-row" style="justify-content:flex-start; margin-top:14px;">
+          <button class="secondary" onclick="checkCrossword()">Check Answers ✅</button>
+          <button class="secondary" onclick="resetCrossword()">Reset</button>
+          <button id="finishBtn" class="hidden" onclick="goTo('end')">Continue 💌</button>
+        </div>
+        <p id="gameStatus" class="muted">Hint: answers are all one word, lowercase is okay.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- End -->
 <section id="end">
-  <h1>Always You ❤️</h1>
-  <p>7 years down, forever to go.</p>
-  <p>I love you endlessly.</p>
+  <div class="card">
+    <h1>Always You ❤️</h1>
+    <p>7 years down, forever to go.</p>
+    <p>Thank you for being my safe place, my chaos partner, and my favorite hello.</p>
+    <div class="btn-row">
+      <button onclick="goTo('open')">Replay From Start 🔁</button>
+    </div>
+  </div>
 </section>
 
 <script>
-  // Navigation
+  const sections = document.querySelectorAll('section');
+  const bgMusic = document.getElementById('bgMusic');
+
   function goTo(id) {
-    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    sections.forEach((section) => section.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    document.getElementById('bgMusic').play();
+
+    if (id === 'game') {
+      resetCrossword();
+    }
+
+    bgMusic.play().catch(() => {});
   }
 
-  // Floating hearts
   setInterval(() => {
     const heart = document.createElement('div');
     heart.className = 'heart';
-    heart.innerText = '❤️';
-    heart.style.left = Math.random() * 100 + 'vw';
-    heart.style.animationDuration = 4 + Math.random() * 4 + 's';
+    heart.textContent = Math.random() > 0.5 ? '❤️' : '💗';
+    heart.style.left = `${Math.random() * 100}vw`;
+    heart.style.fontSize = `${14 + Math.random() * 24}px`;
+    heart.style.animationDuration = `${4 + Math.random() * 5}s`;
     document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 6000);
-  }, 500);
+    setTimeout(() => heart.remove(), 9000);
+  }, 400);
 
-  // No button escape
   const noBtn = document.getElementById('noBtn');
-  noBtn.addEventListener('mouseover', () => {
-    const x = Math.random() * (window.innerWidth - 100);
-    const y = Math.random() * (window.innerHeight - 100);
-    noBtn.style.left = x + 'px';
-    noBtn.style.top = y + 'px';
+  const quizBtns = document.getElementById('quizBtns');
+
+  function moveNoBtn() {
+    if (window.innerWidth <= 640) return;
+    const bounds = quizBtns.getBoundingClientRect();
+    const maxX = Math.max(0, bounds.width - noBtn.offsetWidth);
+    const maxY = 80;
+    noBtn.style.left = `${Math.random() * maxX}px`;
+    noBtn.style.top = `${Math.random() * maxY}px`;
+  }
+
+  ['mouseenter', 'touchstart', 'click'].forEach((eventName) => {
+    noBtn.addEventListener(eventName, (event) => {
+      event.preventDefault();
+      moveNoBtn();
+    });
   });
 
-  // Mini game jump
-  const runner = document.getElementById('runner');
-  let jumping = false;
+  const crosswordAnswers = {
+    a1: 'gullyboy',
+    a2: 'eight',
+    a3: 'talli',
+    a4: 'puppy'
+  };
 
-  document.addEventListener('click', () => {
-    if (jumping) return;
-    jumping = true;
-    runner.style.bottom = '140px';
-    setTimeout(() => {
-      runner.style.bottom = '40px';
-      jumping = false;
-    }, 500);
-  });
+  const crossWords = [
+    { id: 'a1', word: 'gullyboy', row: 0, col: 0, dir: 'across', number: 1 },
+    { id: 'a2', word: 'eight', row: 0, col: 2, dir: 'down', number: 2 },
+    { id: 'a3', word: 'talli', row: 2, col: 2, dir: 'across', number: 3 },
+    { id: 'a4', word: 'puppy', row: 0, col: 5, dir: 'down', number: 4 }
+  ];
+
+  const gridSize = 8;
+  const crossGrid = document.getElementById('crossGrid');
+  const statusLabel = document.getElementById('gameStatus');
+  const finishBtn = document.getElementById('finishBtn');
+
+  function buildGrid(correctIds = []) {
+    crossGrid.innerHTML = '';
+    const map = {};
+
+    crossWords.forEach(({ id, word, row, col, dir, number }) => {
+      word.split('').forEach((letter, i) => {
+        const r = dir === 'across' ? row : row + i;
+        const c = dir === 'across' ? col + i : col;
+        const key = `${r}-${c}`;
+
+        if (!map[key]) {
+          map[key] = { letter, numbers: [number], owners: [id] };
+        } else {
+          map[key].letter = letter;
+          map[key].owners.push(id);
+        }
+      });
+    });
+
+    for (let r = 0; r < gridSize; r += 1) {
+      for (let c = 0; c < gridSize; c += 1) {
+        const cell = document.createElement('div');
+        const key = `${r}-${c}`;
+        const data = map[key];
+
+        if (data) {
+          const isCorrect = data.owners.some((owner) => correctIds.includes(owner));
+          cell.className = `cell filled${isCorrect ? ' ok' : ''}`;
+          cell.textContent = data.letter;
+          const numberHere = crossWords.find((w) => w.row === r && w.col === c)?.number;
+          if (numberHere) {
+            const n = document.createElement('span');
+            n.className = 'n';
+            n.textContent = numberHere;
+            cell.appendChild(n);
+          }
+        } else {
+          cell.className = 'cell';
+          cell.style.opacity = '0.2';
+        }
+
+        crossGrid.appendChild(cell);
+      }
+    }
+  }
+
+  function clean(value) {
+    return value.toLowerCase().replace(/\s+/g, '');
+  }
+
+  function checkCrossword() {
+    const correct = [];
+
+    Object.entries(crosswordAnswers).forEach(([id, answer]) => {
+      const input = document.getElementById(id);
+      if (clean(input.value) === answer) {
+        correct.push(id);
+        input.style.borderColor = '#76d7a4';
+        input.style.background = '#f0fff7';
+      } else {
+        input.style.borderColor = '#ff8fab';
+        input.style.background = '#fff5f7';
+      }
+    });
+
+    buildGrid(correct);
+
+    if (correct.length === 4) {
+      statusLabel.innerHTML = '<span class="result-ok">Perfect! You know us too well 🥹💖</span>';
+      finishBtn.classList.remove('hidden');
+    } else {
+      statusLabel.textContent = `You got ${correct.length}/4 right. Try again, love 💕`;
+      finishBtn.classList.add('hidden');
+    }
+  }
+
+  function resetCrossword() {
+    Object.keys(crosswordAnswers).forEach((id) => {
+      const input = document.getElementById(id);
+      input.value = '';
+      input.style.borderColor = '#f0b7c8';
+      input.style.background = 'white';
+    });
+    finishBtn.classList.add('hidden');
+    statusLabel.textContent = 'Hint: answers are all one word, lowercase is okay.';
+    buildGrid([]);
+  }
+
+  buildGrid([]);
 </script>
 
 </body>
