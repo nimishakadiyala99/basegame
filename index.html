@@ -159,64 +159,7 @@
       transition: left 0.18s ease, top 0.18s ease;
     }
 
-    /* Mini game */
-    .game-wrap {
-      width: min(780px, 94vw);
-      margin-top: 8px;
-    }
 
-    .game-area {
-      position: relative;
-      width: 100%;
-      height: 260px;
-      border-radius: 20px;
-      overflow: hidden;
-      background: linear-gradient(to top, #ffd6e0 30%, #fff4f7 30%);
-      border: 2px solid rgba(255, 255, 255, 0.7);
-      box-shadow: var(--shadow);
-    }
-
-    .score {
-      position: absolute;
-      right: 14px;
-      top: 10px;
-      font-weight: 700;
-      color: #7a3646;
-      z-index: 3;
-    }
-
-    .runner {
-      position: absolute;
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      left: 40px;
-      bottom: 32px;
-      background: radial-gradient(circle at 30% 30%, #ff88a0, #ff4d6d);
-      box-shadow: 0 8px 16px rgba(255, 77, 109, 0.4);
-      transition: bottom 0.42s cubic-bezier(.2,.8,.2,1);
-      z-index: 2;
-    }
-
-    .runner::after {
-      content: '💖';
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      font-size: 21px;
-    }
-
-    .obstacle {
-      position: absolute;
-      right: -45px;
-      bottom: 30px;
-      width: 36px;
-      height: 60px;
-      border-radius: 8px;
-      background: #7a5360;
-      z-index: 1;
-    }
 
     .controls {
       margin-top: 14px;
@@ -355,7 +298,7 @@
     </ul>
     <p><strong>Happy 7-Year Anniversary ❤️</strong></p>
     <div class="btn-row">
-      <button onclick="goTo('quiz')">One Important Question 😌</button>
+      <button onclick="goTo('crossword')">One More Thing 💭</button>
     </div>
   </div>
 </section>
@@ -371,22 +314,7 @@
   </div>
 </section>
 
-<section id="game">
-  <div class="card game-wrap">
-    <h1>Catch the Love 💕</h1>
-    <p>Press <strong>Space</strong>, tap, or click to jump. Reach 12 points to win.</p>
-    <div class="game-area" id="gameArea">
-      <div class="score" id="score">Score: 0</div>
-      <div class="runner" id="runner"></div>
-      <div class="obstacle" id="obstacle"></div>
-    </div>
-    <div class="controls">
-      <button class="secondary" onclick="startGame()">Restart Game</button>
-      <button id="gameFinishBtn" class="hidden" onclick="goTo('crossword')">Continue 💌</button>
-    </div>
-    <p id="gameStatus" class="muted">You got this, babe ✨</p>
-  </div>
-</section>
+
 
 <section id="end">
   <div class="card">
@@ -439,10 +367,6 @@
     sections.forEach((section) => section.classList.remove('active'));
     document.getElementById(id).classList.add('active');
 
-    if (id === 'game') {
-      startGame();
-    }
-
     // Browsers block autoplay without user interaction; this is called by button click.
     bgMusic.play().catch(() => {});
   }
@@ -481,102 +405,7 @@
     });
   });
 
-  // Mini game logic
-  const runner = document.getElementById('runner');
-  const obstacle = document.getElementById('obstacle');
-  const scoreLabel = document.getElementById('score');
-  const gameStatusLabel = document.getElementById('gameStatus');
-  const gameFinishBtn = document.getElementById('gameFinishBtn');
 
-  let jumping = false;
-  let score = 0;
-  let obstacleX = -45;
-  let obstacleSpeed = 5;
-  let gameLoopId = null;
-
-  function jump() {
-    if (jumping) return;
-    jumping = true;
-    runner.style.bottom = '120px';
-    setTimeout(() => {
-      runner.style.bottom = '32px';
-      setTimeout(() => {
-        jumping = false;
-      }, 60);
-    }, 430);
-  }
-
-  function resetObstacle() {
-    obstacleX = -45;
-    obstacle.style.right = `${obstacleX}px`;
-  }
-
-  function updateGame() {
-    obstacleX += obstacleSpeed;
-    obstacle.style.right = `${obstacleX}px`;
-
-    const runnerBottom = parseInt(window.getComputedStyle(runner).bottom, 10);
-    const runnerLeft = 40;
-    const runnerRight = runnerLeft + 52;
-
-    const obsRight = obstacleX;
-    const obsLeft = obstacleX - 36;
-
-    const horizontalHit = runnerRight >= obsLeft && runnerLeft <= obsRight;
-    const verticalHit = runnerBottom <= 70;
-
-    if (horizontalHit && verticalHit) {
-      gameStatusLabel.textContent = 'Oops! You hit a block. Try again 😘';
-      startGame();
-      return;
-    }
-
-    if (obstacleX > window.innerWidth + 60) {
-      score += 1;
-      scoreLabel.textContent = `Score: ${score}`;
-      obstacleSpeed = Math.min(10, obstacleSpeed + 0.25);
-      resetObstacle();
-
-      if (score >= 12) {
-        clearInterval(gameLoopId);
-        gameLoopId = null;
-        gameFinishBtn.classList.remove('hidden');
-        gameStatusLabel.textContent = 'You win my heart every time 🥹';
-      }
-    }
-  }
-
-  function startGame() {
-    score = 0;
-    obstacleSpeed = 5;
-    scoreLabel.textContent = 'Score: 0';
-    gameStatusLabel.textContent = 'You got this, babe ✨';
-    gameFinishBtn.classList.add('hidden');
-    runner.style.bottom = '32px';
-    jumping = false;
-    resetObstacle();
-    if (gameLoopId) {
-      clearInterval(gameLoopId);
-    }
-    gameLoopId = setInterval(updateGame, 16);
-  }
-
-  document.addEventListener('click', (event) => {
-    const activeSection = document.querySelector('section.active');
-    if (activeSection && activeSection.id === 'game') {
-      const buttonClicked = event.target.closest('button');
-      if (!buttonClicked) {
-        jump();
-      }
-    }
-  });
-
-  document.addEventListener('keydown', (event) => {
-    if (event.code === 'Space' && document.getElementById('game').classList.contains('active')) {
-      event.preventDefault();
-      jump();
-    }
-  });
 
   const crosswordAnswers = {
     a1: 'gullyboy',
@@ -594,7 +423,7 @@
 
   const gridSize = 8;
   const crossGrid = document.getElementById('crossGrid');
-  const crosswordStatusLabel = document.getElementById('gameStatus');
+  const crosswordStatusLabel = document.querySelector('#crossword #gameStatus');
   const crosswordFinishBtn = document.getElementById('crosswordFinishBtn');
 
   function buildGrid(correctIds = []) {
