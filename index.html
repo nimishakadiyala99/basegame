@@ -461,6 +461,115 @@
       jump();
     }
   });
+
+  const crosswordAnswers = {
+    a1: 'gullyboy',
+    a2: 'eight',
+    a3: 'talli',
+    a4: 'puppy'
+  };
+
+  const crossWords = [
+    { id: 'a1', word: 'gullyboy', row: 0, col: 0, dir: 'across', number: 1 },
+    { id: 'a2', word: 'eight', row: 0, col: 2, dir: 'down', number: 2 },
+    { id: 'a3', word: 'talli', row: 2, col: 2, dir: 'across', number: 3 },
+    { id: 'a4', word: 'puppy', row: 0, col: 5, dir: 'down', number: 4 }
+  ];
+
+  const gridSize = 8;
+  const crossGrid = document.getElementById('crossGrid');
+  const statusLabel = document.getElementById('gameStatus');
+  const finishBtn = document.getElementById('finishBtn');
+
+  function buildGrid(correctIds = []) {
+    crossGrid.innerHTML = '';
+    const map = {};
+
+    crossWords.forEach(({ id, word, row, col, dir, number }) => {
+      word.split('').forEach((letter, i) => {
+        const r = dir === 'across' ? row : row + i;
+        const c = dir === 'across' ? col + i : col;
+        const key = `${r}-${c}`;
+
+        if (!map[key]) {
+          map[key] = { letter, numbers: [number], owners: [id] };
+        } else {
+          map[key].letter = letter;
+          map[key].owners.push(id);
+        }
+      });
+    });
+
+    for (let r = 0; r < gridSize; r += 1) {
+      for (let c = 0; c < gridSize; c += 1) {
+        const cell = document.createElement('div');
+        const key = `${r}-${c}`;
+        const data = map[key];
+
+        if (data) {
+          const isCorrect = data.owners.some((owner) => correctIds.includes(owner));
+          cell.className = `cell filled${isCorrect ? ' ok' : ''}`;
+          cell.textContent = data.letter;
+          const numberHere = crossWords.find((w) => w.row === r && w.col === c)?.number;
+          if (numberHere) {
+            const n = document.createElement('span');
+            n.className = 'n';
+            n.textContent = numberHere;
+            cell.appendChild(n);
+          }
+        } else {
+          cell.className = 'cell';
+          cell.style.opacity = '0.2';
+        }
+
+        crossGrid.appendChild(cell);
+      }
+    }
+  }
+
+  function clean(value) {
+    return value.toLowerCase().replace(/\s+/g, '');
+  }
+
+  function checkCrossword() {
+    const correct = [];
+
+    Object.entries(crosswordAnswers).forEach(([id, answer]) => {
+      const input = document.getElementById(id);
+      if (clean(input.value) === answer) {
+        correct.push(id);
+        input.style.borderColor = '#76d7a4';
+        input.style.background = '#f0fff7';
+      } else {
+        input.style.borderColor = '#ff8fab';
+        input.style.background = '#fff5f7';
+      }
+    });
+
+    buildGrid(correct);
+
+    if (correct.length === 4) {
+      statusLabel.innerHTML = '<span class="result-ok">Perfect! You know us too well 🥹💖</span>';
+      finishBtn.classList.remove('hidden');
+    } else {
+      statusLabel.textContent = `You got ${correct.length}/4 right. Try again, love 💕`;
+      finishBtn.classList.add('hidden');
+    }
+  }
+
+  function resetCrossword() {
+    Object.keys(crosswordAnswers).forEach((id) => {
+      const input = document.getElementById(id);
+      input.value = '';
+      input.style.borderColor = '#f0b7c8';
+      input.style.background = 'white';
+    });
+    finishBtn.classList.add('hidden');
+    statusLabel.textContent = 'Hint: answers are all one word, lowercase is okay.';
+    buildGrid([]);
+  }
+
+  buildGrid([]);
 </script>
 
 </body>
