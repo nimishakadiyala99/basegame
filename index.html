@@ -226,6 +226,90 @@
       flex-wrap: wrap;
     }
 
+    /* Crossword styles */
+    #crossGrid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 4px;
+      margin: 20px auto;
+      width: fit-content;
+      max-width: 100%;
+    }
+
+    .cell {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #ddd;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 18px;
+      position: relative;
+      border-radius: 4px;
+    }
+
+    .cell.filled {
+      background: #fff9eb;
+      border-color: #f0b7c8;
+    }
+
+    .cell.filled.ok {
+      background: #f0fff7;
+      border-color: #76d7a4;
+      color: #22a844;
+    }
+
+    .cell .n {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #999;
+    }
+
+    .crossword-inputs {
+      margin: 20px auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: min(500px, 100%);
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .input-group label {
+      font-weight: 600;
+      min-width: 80px;
+      color: var(--text);
+    }
+
+    .input-group input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 2px solid #f0b7c8;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      transition: border-color 0.2s ease;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .result-ok {
+      color: #22a844;
+      font-weight: 600;
+    }
+
     .hidden { display: none; }
 
     @media (max-width: 640px) {
@@ -298,7 +382,7 @@
     </div>
     <div class="controls">
       <button class="secondary" onclick="startGame()">Restart Game</button>
-      <button id="finishBtn" class="hidden" onclick="goTo('end')">Continue 💌</button>
+      <button id="finishBtn" class="hidden" onclick="goTo('crossword')">Continue 💌</button>
     </div>
     <p id="gameStatus" class="muted">You got this, babe ✨</p>
   </div>
@@ -312,6 +396,38 @@
     <div class="btn-row">
       <button onclick="goTo('open')">Replay From Start 🔁</button>
     </div>
+  </div>
+</section>
+
+<section id="crossword">
+  <div class="card game-wrap">
+    <h1>One More Thing 💭</h1>
+    <p>Answer these questions about us. You know this better than anyone 😉</p>
+    <div id="crossGrid"></div>
+    <div class="crossword-inputs">
+      <div class="input-group">
+        <label for="a1">1 Across:</label>
+        <input type="text" id="a1" placeholder="Our first inside joke movie">
+      </div>
+      <div class="input-group">
+        <label for="a2">2 Down:</label>
+        <input type="text" id="a2" placeholder="Years we've been together">
+      </div>
+      <div class="input-group">
+        <label for="a3">3 Across:</label>
+        <input type="text" id="a3" placeholder="You are... (tall/short)">
+      </div>
+      <div class="input-group">
+        <label for="a4">4 Down:</label>
+        <input type="text" id="a4" placeholder="Our pet's type">
+      </div>
+    </div>
+    <div class="controls">
+      <button onclick="checkCrossword()">Check Answers ✨</button>
+      <button class="secondary" onclick="resetCrossword()">Clear All</button>
+      <button id="finishBtn" class="hidden" onclick="goTo('end')">Continue 💌</button>
+    </div>
+    <p id="gameStatus" class="muted">Hint: answers are all one word, lowercase is okay.</p>
   </div>
 </section>
 
@@ -478,8 +594,6 @@
 
   const gridSize = 8;
   const crossGrid = document.getElementById('crossGrid');
-  const statusLabel = document.getElementById('gameStatus');
-  const finishBtn = document.getElementById('finishBtn');
 
   function buildGrid(correctIds = []) {
     crossGrid.innerHTML = '';
