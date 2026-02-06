@@ -382,7 +382,7 @@
     </div>
     <div class="controls">
       <button class="secondary" onclick="startGame()">Restart Game</button>
-      <button id="finishBtn" class="hidden" onclick="goTo('crossword')">Continue 💌</button>
+      <button id="gameFinishBtn" class="hidden" onclick="goTo('crossword')">Continue 💌</button>
     </div>
     <p id="gameStatus" class="muted">You got this, babe ✨</p>
   </div>
@@ -425,7 +425,7 @@
     <div class="controls">
       <button onclick="checkCrossword()">Check Answers ✨</button>
       <button class="secondary" onclick="resetCrossword()">Clear All</button>
-      <button id="finishBtn" class="hidden" onclick="goTo('end')">Continue 💌</button>
+      <button id="crosswordFinishBtn" class="hidden" onclick="goTo('end')">Continue 💌</button>
     </div>
     <p id="gameStatus" class="muted">Hint: answers are all one word, lowercase is okay.</p>
   </div>
@@ -485,8 +485,8 @@
   const runner = document.getElementById('runner');
   const obstacle = document.getElementById('obstacle');
   const scoreLabel = document.getElementById('score');
-  const statusLabel = document.getElementById('gameStatus');
-  const finishBtn = document.getElementById('finishBtn');
+  const gameStatusLabel = document.getElementById('gameStatus');
+  const gameFinishBtn = document.getElementById('gameFinishBtn');
 
   let jumping = false;
   let score = 0;
@@ -526,7 +526,7 @@
     const verticalHit = runnerBottom <= 70;
 
     if (horizontalHit && verticalHit) {
-      statusLabel.textContent = 'Oops! You hit a block. Try again 😘';
+      gameStatusLabel.textContent = 'Oops! You hit a block. Try again 😘';
       startGame();
       return;
     }
@@ -540,8 +540,8 @@
       if (score >= 12) {
         clearInterval(gameLoopId);
         gameLoopId = null;
-        finishBtn.classList.remove('hidden');
-        statusLabel.textContent = 'You win my heart every time 🥹';
+        gameFinishBtn.classList.remove('hidden');
+        gameStatusLabel.textContent = 'You win my heart every time 🥹';
       }
     }
   }
@@ -550,8 +550,8 @@
     score = 0;
     obstacleSpeed = 5;
     scoreLabel.textContent = 'Score: 0';
-    statusLabel.textContent = 'You got this, babe ✨';
-    finishBtn.classList.add('hidden');
+    gameStatusLabel.textContent = 'You got this, babe ✨';
+    gameFinishBtn.classList.add('hidden');
     runner.style.bottom = '32px';
     jumping = false;
     resetObstacle();
@@ -594,6 +594,8 @@
 
   const gridSize = 8;
   const crossGrid = document.getElementById('crossGrid');
+  const crosswordStatusLabel = document.getElementById('gameStatus');
+  const crosswordFinishBtn = document.getElementById('crosswordFinishBtn');
 
   function buildGrid(correctIds = []) {
     crossGrid.innerHTML = '';
@@ -663,11 +665,11 @@
     buildGrid(correct);
 
     if (correct.length === 4) {
-      statusLabel.innerHTML = '<span class="result-ok">Perfect! You know us too well 🥹💖</span>';
-      finishBtn.classList.remove('hidden');
+      crosswordStatusLabel.innerHTML = '<span class="result-ok">Perfect! You know us too well 🥹💖</span>';
+      crosswordFinishBtn.classList.remove('hidden');
     } else {
-      statusLabel.textContent = `You got ${correct.length}/4 right. Try again, love 💕`;
-      finishBtn.classList.add('hidden');
+      crosswordStatusLabel.textContent = `You got ${correct.length}/4 right. Try again, love 💕`;
+      crosswordFinishBtn.classList.add('hidden');
     }
   }
 
@@ -678,8 +680,8 @@
       input.style.borderColor = '#f0b7c8';
       input.style.background = 'white';
     });
-    finishBtn.classList.add('hidden');
-    statusLabel.textContent = 'Hint: answers are all one word, lowercase is okay.';
+    crosswordFinishBtn.classList.add('hidden');
+    crosswordStatusLabel.textContent = 'Hint: answers are all one word, lowercase is okay.';
     buildGrid([]);
   }
 
